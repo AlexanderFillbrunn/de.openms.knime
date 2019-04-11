@@ -20,4 +20,58 @@
             class="de.openms.knime.importers.mzml.MzMLSpectrumImporter">
       </demangler>
    </extension>
+   <extension
+         point="org.knime.js.core.webResources">
+      <webResourceBundle
+            debug="true"
+            name="Spectrum View"
+            usesDefine="false"
+            version="0.0.1"
+            webResourceBundleID="de.openms.knime.views.spectrumView.webResourceBundle">
+         <webResource
+               relativePathSource="js-src/de/openms/knime/views/spectrum"
+               relativePathTarget="de/openms/knime/views/spectrum">
+         </webResource>
+         <importResource
+               relativePath="de/openms/knime/views/spectrum/spectrum.js"
+               type="JAVASCRIPT">
+         </importResource>
+         <webDependency
+               webResourceBundleID="knimeLazyLoadingService_1.0">
+         </webDependency>
+         <webDependency
+               webResourceBundleID="D3_4.13.0">
+         </webDependency>
+      </webResourceBundle>
+      <webResourceBundle
+            debug="true"
+            name="OpenMS Views"
+            usesDefine="false"
+            version="1.0.0"
+            webResourceBundleID="de.openms.knime.views.webResourceBundle">
+         <webResource
+               relativePathSource="js-src/dummy.js">
+         </webResource>
+      </webResourceBundle>
+   </extension>
+   <extension
+         point="org.knime.js.core.javascriptComponents">
+      <javascriptComponent
+            getComponentValue-method-name="getComponentValue"
+            implementationBundleID="de.openms.knime.views.spectrumView.webResourceBundle"
+            init-method-name="init"
+            javascriptComponentID="de.openms.knime.views.spectrumView"
+            name="Spectrum View"
+            namespace="spectrumView"
+            setValidationError-method-name="setValidationError"
+            validate-method-name="validate">
+      </javascriptComponent>
+   </extension>
+   <extension
+         point="org.knime.workbench.repository.nodes">
+      <node
+            deprecated="false"
+            factory-class="de.openms.knime.views.spectrum.SpectrumViewNodeFactory">
+      </node>
+   </extension>
 </plugin>
