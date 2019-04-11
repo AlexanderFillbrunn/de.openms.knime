@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<knimeNode icon="./request.png" type="Visualizer" xmlns="http://knime.org/node/v3.1" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://knime.org/node/v3.1 http://knime.org/node/v3.1.xsd">
+    <name>Feature View</name>
+    <shortDescription>
+    	Displays features and spectra.</shortDescription>
+    <fullDescription>
+    	<intro>
+    		The interactive view displays mass spec features and when zoomed in wide enough,
+    		the spectra are loaded and displayed.
+    	</intro>
+    	<tab name="General Options">
+	    	<option name="Hide in wizard">
+	    		Whether or not to include the node in a combined metanode view or WebPortal page.
+	    	</option>
+	    	<option name="RT Start Column">Column that contains the start retention time of the feature's bounding box.</option>
+	    	<option name="RT End Column">Column that contains the end retention time of the feature's bounding box.</option>
+	    	<option name="MZ Start Column">Column that contains the start mass over charge of the feature's bounding box.</option>
+	    	<option name="MZ End Column">Column that contains the end mass over charge of the feature's bounding box.</option>
+	    	<option name="Quality">Column that contains the feature's quality.</option>
+	    	<option name="Intensity">Column that contains the feature's intensity.</option>
+	    	<option name="Table name">The name of the SQLite table that contains the spectra.</option>
+    	</tab>
+    	<tab name="Type Mapping">
+    		<option name="Type Mapping">Settings for mapping database types to KNIME types.</option>
+    	</tab>
+    </fullDescription>
+    <interactiveView name="Feature View">
+    	Shows features on a map.
+   	</interactiveView>
+    <ports>
+    	<inPort index="0" name="Features Table">Table with features</inPort>
+    	<inPort index="1" name="Database Connection">Database with spectra. Needs the columns "mz", "rt", and "intensity" </inPort>
+    </ports>
+</knimeNode>
