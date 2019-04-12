@@ -60,7 +60,7 @@ public class RowToFeatureIterator implements Iterator<Feature>, Closeable {
         double mzEnd = ((DoubleValue)row.getCell(m_mzEndCol)).getDoubleValue();
         double intensity = ((DoubleValue)row.getCell(m_intensityCol)).getDoubleValue();
         double quality = ((DoubleValue)row.getCell(m_qualityCol)).getDoubleValue();
-        return new Feature(mzStart, mzEnd, rtStart, rtEnd, intensity, quality);
+        return new Feature(row.getKey().toString(), mzStart, mzEnd, rtStart, rtEnd, intensity, quality);
     }
     
     /**

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class Feature {
+    private String m_id;
     private double m_mzStart;
     private double m_mzEnd;
     private double m_rtStart;
@@ -20,8 +21,9 @@ public class Feature {
      * @param intensity the feature's intensity
      * @param quality the feature's quality
      */
-    public Feature(double mzStart, double mzEnd, double rtStart, double rtEnd, double intensity, double quality) {
+    public Feature(String id, double mzStart, double mzEnd, double rtStart, double rtEnd, double intensity, double quality) {
         super();
+        m_id = id;
         m_mzStart = mzStart;
         m_mzEnd = mzEnd;
         m_rtStart = rtStart;
@@ -34,6 +36,21 @@ public class Feature {
      * Instantiates a default <code>Feature</code>.
      */
     public Feature() {
+    }
+    
+    /**
+     * @return the feature's id
+     */
+    public String getId() {
+        return m_id;
+    }
+    
+    /**
+     * Sets the feature id.
+     * @param id the new id
+     */
+    public void setId(String id) {
+        m_id = id;
     }
     
     /**
@@ -142,6 +159,7 @@ public class Feature {
         }
         Feature other = (Feature)obj;
         return new EqualsBuilder()
+                .append(m_id, other.m_id)
                 .append(m_mzStart, other.m_mzStart)
                 .append(m_mzEnd, other.m_mzEnd)
                 .append(m_rtEnd, other.m_rtEnd)
@@ -157,6 +175,7 @@ public class Feature {
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
+                .append(m_id)
                 .append(m_mzStart)
                 .append(m_mzEnd)
                 .append(m_rtEnd)

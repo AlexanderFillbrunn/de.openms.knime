@@ -8,12 +8,11 @@ spectrumView = function() {
 	var canvasHeight = 500;
 	var mzScale, rtScale;
 	var features = [];
-	var olTopLeft, olTopRight, olBottomLeft, olBottomRight;
+	var olTopRight;
 	var rtMult = 1;
 	var mzMult = 1;
-
-	selected = null;
 	var curTransform = d3.zoomIdentity;
+	var _zoom;
 	var points = [];
 	var pointsTimeout = null;
 
@@ -32,8 +31,14 @@ spectrumView = function() {
 	// Color scale for features and points
 	const colorScale = d3.scaleLinear()
                 .domain([0, 0.125, 0.25, 0.5, 0.625, 0.75, 0.875, 1])
-                .range(['#1a9850', '#66bd63', '#a6d96a', '#d9ef8b', '#fee08b', '#fdae61', '#f46d43', '#d73027'])
+                .range(['#1a9850', '#66bd63', '#a6d96a', '#d9ef8b',
+												'#fee08b', '#fdae61', '#f46d43', '#d73027'])
                 .interpolate(d3.interpolateHcl);
+
+	// Creates the controls in the top right corner
+	function createControls() {
+		knimeService.addButton('scatter-zoom-reset-button', 'search-minus', 'Reset Zoom', resetTransform);
+	}
 
 	// Finds a feature that contains the given point
 	function getFeatureAtPoint(pt) {
@@ -41,10 +46,12 @@ spectrumView = function() {
 		const mz = mzScale.invert(tpt[0]);
 		const rt = rtScale.invert(tpt[1]);
 		for (let f of features) {
-			if (mz >= f.mzStart && mz <= f.mzEnd && rt >= f.rtStart && rt <= f.rtEnd) {
+			if (mz >= f.mzStart && mz <= f.mzEnd &&
+					rt >= f.rtStart && rt <= f.rtEnd) {
 				return f;
 			}
 		}
+		return null;
 	}
 
 	// Given a point on the canvas, calculates the corresponding mz and rt
@@ -53,6 +60,13 @@ spectrumView = function() {
 		const mz = mzScale.invert(tpt[0]);
 		const rt = rtScale.invert(tpt[1]);
 		return [mz, rt];
+	}
+
+	// Resets pan and zoom to default
+	function resetTransform() {
+		rtMult = 1;
+		mzMult = 1;
+		canvas.call(_zoom.transform, d3.zoomIdentity);
 	}
 
 	// Loads points for the current viewport
@@ -94,22 +108,14 @@ spectrumView = function() {
 			.style("height", "100%")
 			.style("overflow", "hidden");
 
+		_zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoom);
 		// Create main drawing area with zooming enabled
 		canvas = body.append("canvas")
 			.attr("id", "main-canvas")
 			.style("width", "100%")
 			.style("height", "100%")
-			.call(d3.zoom().scaleExtent([1, 8]).on("zoom", zoom));
-			/*
-			.on("click", function() {
-				const f = getFeatureAtPoint(d3.mouse(this));
-				if (f) {
-					if (selected) selected.selected = false;
-					f.selected = true;
-					selected = f;
-					draw();
-				}
-			})*/
+			.call(_zoom);
+
 		ctx = canvas.node().getContext("2d");
 		updateCanvasSize();
 
@@ -133,13 +139,20 @@ spectrumView = function() {
 		olTopRight = body.append("div")
 			.style("position", "absolute")
 			.style("right", "10px")
-			.style("top", "5px")
+			.style("top", "30px")
 			.style("background-color", "#dddddd99")
 			.style("padding", "3px")
 			.style("border-radius", "3px");
 
 		// React to resize by redrawing with proper ratios
 		window.addEventListener("resize", updateCanvasSize);
+		createControls();
+
+		if (knimeService.isInteractivityAvailable()) {
+			knimeService.subscribeToSelection(_representation.tableId, function(data) {
+				alert("DATA!");
+			});
+		}
 	}
 
 	// Updates the canvas on a resize
