@@ -66,12 +66,22 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
     private static final String CFG_MAX_MZ = "maxmz";
     private static final String CFG_MIN_MZ = "minmz";
     private static final String CFG_HAS_DB = "hasDB";
+    private static final String CFG_TABLE_ID = "tableId";
     
     private int m_maxRt;
     private int m_minRt;
     private int m_maxMz;
     private int m_minMz;
     private boolean m_hasDB;
+    private int m_tableId;
+    
+    public int getTableId() {
+        return m_tableId;
+    }
+    
+    public void setTableId(int tableId) {
+        m_tableId = tableId;
+    }
     
     public boolean isHasDB() {
         return m_hasDB;
@@ -123,6 +133,7 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
         settings.addInt(CFG_MAX_RT, m_maxRt);
         settings.addInt(CFG_MIN_RT, m_minRt);
         settings.addBoolean(CFG_HAS_DB, m_hasDB);
+        settings.addInt(CFG_TABLE_ID, m_tableId);
     }
 
     /**
@@ -135,6 +146,7 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
         m_maxRt = settings.getInt(CFG_MAX_RT);
         m_minRt = settings.getInt(CFG_MIN_RT);
         m_hasDB = settings.getBoolean(CFG_HAS_DB);
+        m_tableId = settings.getInt(CFG_TABLE_ID);
     }
 
     /**
@@ -153,6 +165,7 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
         }
         SpectrumViewViewRepresentation other = (SpectrumViewViewRepresentation)obj;
         return new EqualsBuilder()
+                .append(m_tableId, other.m_tableId)
                 .append(m_maxMz, other.m_maxMz)
                 .append(m_minMz, other.m_minMz)
                 .append(m_maxRt, other.m_maxRt)
@@ -167,6 +180,7 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
+                .append(m_tableId)
                 .append(m_maxMz)
                 .append(m_minMz)
                 .append(m_maxRt)

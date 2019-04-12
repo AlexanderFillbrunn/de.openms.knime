@@ -334,6 +334,7 @@ public class SpectrumViewNodeModel
         } else {
             rep.setHasDB(false);
         }
+        rep.setTableId(m_featureTable.getBufferedTableId());
         return new PortObject[] {};
     }
 
