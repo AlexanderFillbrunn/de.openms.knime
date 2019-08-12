@@ -1,5 +1,6 @@
 spectrumView = function() {
 
+<<<<<<< HEAD
 	//Constants for the zoom mode
 	const PAN_ZOOM_MODE = 0;
 	const RECT_MODE = 1;
@@ -16,11 +17,29 @@ spectrumView = function() {
 
 	const RT_MARGIN = 50;
 	const MZ_MARGIN = 25;
+=======
+	var handler = {};
+	var _representation, _value;
+	var canvas;
+	var ctx;
+	var canvasWidth = 500;
+	var canvasHeight = 500;
+	var mzScale, rtScale;
+	var features = [];
+	var olTopRight;
+	var rtMult = 1;
+	var mzMult = 1;
+	var curTransform = d3.zoomIdentity;
+	var _zoom;
+	var points = [];
+	var pointsTimeout = null;
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 
 	const MAX_POINT_SIZE = 6;
 	const MIN_POINT_SIZE = 2;
 	const SCALE_THRESHOLD = 5;
 
+<<<<<<< HEAD
 	let handler = {};
 	let _representation, _value;
 	let canvas;
@@ -93,18 +112,59 @@ spectrumView = function() {
 			disableZoom();
 			enableRect();
 		}
+=======
+	// Enable lazy loading
+	if (knimeService.isViewRequestsSupported()) {
+		knimeService.loadConditionally(["de/openms/knime/views/spectrum/spectrumLazyLoad"],
+		function() {
+			spectrumView.initRequest({type: "FEATURES"});
+		});
+	}
+
+	// Color scale for features and points
+	const colorScale = d3.scaleLinear()
+                .domain([0, 0.125, 0.25, 0.5, 0.625, 0.75, 0.875, 1])
+                .range(['#1a9850', '#66bd63', '#a6d96a', '#d9ef8b',
+												'#fee08b', '#fdae61', '#f46d43', '#d73027'])
+                .interpolate(d3.interpolateHcl);
+
+	// Creates the controls in the top right corner
+	function createControls() {
+		knimeService.addButton('scatter-zoom-reset-button', 'search-minus', 'Reset Zoom', resetTransform);
+	}
+
+	// Finds a feature that contains the given point
+	function getFeatureAtPoint(pt) {
+		const tpt = curTransform.invert(pt);
+		const mz = mzScale.invert(tpt[0]);
+		const rt = rtScale.invert(tpt[1]);
+		for (let f of features) {
+			if (mz >= f.mzStart && mz <= f.mzEnd &&
+					rt >= f.rtStart && rt <= f.rtEnd) {
+				return f;
+			}
+		}
+		return null;
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 	}
 
 	// Given a point on the canvas, calculates the corresponding mz and rt
 	function invertPoint(pt) {
 		const tpt = curTransform.invert(pt);
+<<<<<<< HEAD
 		const mz = mzScale.invert(tpt[1]);
 		const rt = rtScale.invert(tpt[0]);
 		return [rt, mz];
+=======
+		const mz = mzScale.invert(tpt[0]);
+		const rt = rtScale.invert(tpt[1]);
+		return [mz, rt];
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 	}
 
 	// Resets pan and zoom to default
 	function resetTransform() {
+<<<<<<< HEAD
 		if (_zoom) {
 			canvas.call(_zoom.transform, d3.zoomIdentity);
 		}
@@ -116,6 +176,11 @@ spectrumView = function() {
 		updateCanvasSize();
 		updateDetails();
 		draw();
+=======
+		rtMult = 1;
+		mzMult = 1;
+		canvas.call(_zoom.transform, d3.zoomIdentity);
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 	}
 
 	// Loads points for the current viewport
@@ -128,6 +193,7 @@ spectrumView = function() {
 				clearTimeout(pointsTimeout);
 			}
 			pointsTimeout = setTimeout(function() {
+<<<<<<< HEAD
 				pointsTimeout = null;
 				olTopRight.text("Loading intensities...");
 				const r = {
@@ -239,6 +305,29 @@ spectrumView = function() {
 									w: _representation.maxRt - _representation.minRt,
 									h: _representation.maxMz - _representation.minMz};
 		}
+=======
+				olTopRight.text("Loading intensities...");
+				const r = {
+					type: "FEATURE_DATA",
+					mzStart: end[1],
+					mzEnd: start[1],
+					rtStart: start[0],
+					rtEnd: end[0]
+				};
+				spectrumView.initRequest(r);
+			}, 100);
+		}
+	}
+
+	handler.init = function(representation, value) {
+		_representation = representation;
+		_value = value;
+		// Some padding
+		representation.minMz -= 10;
+		representation.maxMz += 10;
+		representation.minRt -= 10;
+		representation.maxRt += 10;
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 
 		const body = d3.select("body");
 		// Avoid scrolling the document
@@ -247,10 +336,15 @@ spectrumView = function() {
 			.style("height", "100%")
 			.style("overflow", "hidden");
 
+<<<<<<< HEAD
+=======
+		_zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoom);
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 		// Create main drawing area with zooming enabled
 		canvas = body.append("canvas")
 			.attr("id", "main-canvas")
 			.style("width", "100%")
+<<<<<<< HEAD
 			.style("height", "100%");
 
 		ctx = canvas.node().getContext("2d");
@@ -262,6 +356,29 @@ spectrumView = function() {
 			updateCanvasSize();
 			updateDetails();
 		}
+=======
+			.style("height", "100%")
+			.call(_zoom);
+
+		ctx = canvas.node().getContext("2d");
+		updateCanvasSize();
+
+		// User can scale with arrow keys
+		d3.select("body")
+	    .on("keydown", function() {
+				if(d3.event.keyCode === 37) {
+					mzMult += 0.01;
+				} else if (d3.event.keyCode == 39) {
+					mzMult = Math.max(0, mzMult - 0.01);
+				}
+				if(d3.event.keyCode === 38) {
+					rtMult += 0.01;
+				} else if (d3.event.keyCode == 40) {
+					rtMult = Math.max(0, rtMult - 0.01);
+				}
+				updateCanvasSize();
+			});
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 
 		// Loading indicator
 		olTopRight = body.append("div")
@@ -276,6 +393,7 @@ spectrumView = function() {
 		window.addEventListener("resize", updateCanvasSize);
 		createControls();
 
+<<<<<<< HEAD
 		if (value.subscribeToSelection && knimeService.isInteractivityAvailable()) {
 			subscribeToSelection();
 		}
@@ -310,6 +428,12 @@ spectrumView = function() {
 				}
 			}
 			draw();
+=======
+		if (knimeService.isInteractivityAvailable()) {
+			knimeService.subscribeToSelection(_representation.tableId, function(data) {
+				alert("DATA!");
+			});
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 		}
 	}
 
@@ -319,6 +443,7 @@ spectrumView = function() {
 		canvasWidth = rect.width;
 		canvasHeight = rect.height;
 		canvas.attr("width", canvasWidth).attr("height", canvasHeight);
+<<<<<<< HEAD
 		if (viewRect) {
 			rtScale = d3.scaleLinear()
 									.domain([viewRect.x, viewRect.x + viewRect.w])
@@ -345,11 +470,28 @@ spectrumView = function() {
 		}
 	}
 
+=======
+		mzScale = d3.scaleLinear()
+								.domain([_representation.minMz, _representation.maxMz])
+								.range([50, canvasWidth / mzMult]);
+		rtScale = d3.scaleLinear()
+								.domain([_representation.minRt, _representation.maxRt])
+								.range([canvasHeight / rtMult - 25, 0]);
+		draw();
+	}
+
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 	// d3 zoom callback
 	function zoom() {
 		curTransform = d3.event.transform;
 		// If zoomed in enough, load the points of feature data
+<<<<<<< HEAD
 		updateDetails();
+=======
+		if (curTransform.k > SCALE_THRESHOLD) {
+			loadFeatureData();
+		}
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 		draw();
 	}
 
@@ -357,6 +499,7 @@ spectrumView = function() {
 	function draw() {
 		ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 		// Draw points
+<<<<<<< HEAD
 		drawPoints();
 		drawFeatures();
 		drawYAxis();
@@ -369,12 +512,24 @@ spectrumView = function() {
 			ctx.strokeStyle = size > MIN_RECT_ZOOM_SIZE ? "#000" : "#f00";
 			ctx.strokeRect(zoomRect.x, zoomRect.y, zoomRect.w, zoomRect.h);
 		}
+=======
+		if (curTransform.k > SCALE_THRESHOLD) {
+			drawPoints();
+		}
+		drawFeatures();
+		drawYAxis();
+		drawXAxis();
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 	}
 
 	// Draw intensity points
 	function drawPoints() {
 		for (let pt of points) {
+<<<<<<< HEAD
 			const t = curTransform.apply([rtScale(pt.rt), mzScale(pt.mass)]);
+=======
+			const t = curTransform.apply([mzScale(pt.mass), rtScale(pt.rt)]);
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 			const i = pt.intensity;
 			ctx.fillStyle = colorScale(i);
 			const size = MIN_POINT_SIZE + i * (MAX_POINT_SIZE - MIN_POINT_SIZE);
@@ -385,6 +540,7 @@ spectrumView = function() {
 	// Draws feature rectangles
 	function drawFeatures() {
 		for (let feature of features) {
+<<<<<<< HEAD
 			const start = curTransform.apply([rtScale(feature.rtStart), mzScale(feature.mzStart)]);
 			const end = curTransform.apply([rtScale(feature.rtEnd), mzScale(feature.mzEnd)]);
 			const i = colorMode === COLOR_BY_INTENSITY ? feature.intensity : feature.quality;
@@ -398,11 +554,22 @@ spectrumView = function() {
 				ctx.fillRect(start[0], start[1], end[0] - start[0], end[1] - start[1]);
 				ctx.strokeStyle = "#999";
 				if (selected[feature.id]) {
+=======
+			const start = curTransform.apply([mzScale(feature.mzStart), rtScale(feature.rtStart)]);
+			const end = curTransform.apply([mzScale(feature.mzEnd), rtScale(feature.rtEnd)]);
+			const i = feature.intensity;
+			if (curTransform.k <= SCALE_THRESHOLD) {
+				ctx.fillStyle = colorScale(i);
+				ctx.fillRect(start[0], start[1], end[0] - start[0], end[1] - start[1]);
+				ctx.strokeStyle = "#999";
+				if (feature.selected) {
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 					ctx.strokeStyle = "#000";
 				}
 				ctx.strokeRect(start[0], start[1], end[0] - start[0], end[1] - start[1]);
 			} else {
 				const color = colorScale(i);
+<<<<<<< HEAD
 				ctx.strokeStyle = color;
 				const width = end[0] - start[0];
 				const height = end[1] - start[1];
@@ -411,6 +578,10 @@ spectrumView = function() {
 					ctx.strokeStyle = "#000";
 					ctx.strokeRect(start[0] - 2, start[1] + 2, width + 4, height - 4);
 				}
+=======
+				ctx.strokeStyle = feature.selected ? "#000" : color;
+				ctx.strokeRect(start[0], start[1], end[0] - start[0], end[1] - start[1]);
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 			}
 		}
 	}
@@ -432,8 +603,13 @@ spectrumView = function() {
 			ctx.lineTo(55, y);
 			ctx.stroke();
 
+<<<<<<< HEAD
 			const mz = invertPoint([0, y])[1];
 			ctx.fillText(Math.round(mz * 10) / 10, 5, y + 4);
+=======
+			const rt = invertPoint([0, y])[1];
+			ctx.fillText(Math.round(rt * 100) / 100, 5, y + 4);
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 		}
 	}
 
@@ -441,8 +617,13 @@ spectrumView = function() {
 		ctx.fillStyle = "#ffffff99";
 		ctx.fillRect(0, canvasHeight - 30, canvasWidth, 30);
 		ctx.beginPath();
+<<<<<<< HEAD
 		ctx.moveTo(RT_MARGIN, canvasHeight - MZ_MARGIN);
 		ctx.lineTo(canvasWidth - 10, canvasHeight - MZ_MARGIN);
+=======
+		ctx.moveTo(50, canvasHeight - 25);
+		ctx.lineTo(canvasWidth - 10, canvasHeight - 25);
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 		ctx.strokeStyle = "#000";
 		ctx.stroke();
 
@@ -454,10 +635,45 @@ spectrumView = function() {
 			ctx.lineTo(x, canvasHeight - 30);
 			ctx.stroke();
 
+<<<<<<< HEAD
 			const rt = invertPoint([x, 0])[0];
 			ctx.fillText(Math.round(rt * 10) / 10, x - 25, canvasHeight - 10);
 		}
 	}
+=======
+			const mz = invertPoint([x, 0])[0];
+			ctx.fillText(Math.round(mz * 100) / 100, x - 30, canvasHeight - 10);
+		}
+	}
+
+/*
+	function staggeredDrawFeatures(idx, num) {
+		const endIdx = Math.min(idx + num, features.length);
+		// Draw feature rectangles
+		for (let i = idx; i < endIdx; i++) {
+			const feature = features[i];
+			const start = curTransform.apply([mzScale(feature.mzStart), rtScale(feature.rtStart)]);
+			const end = curTransform.apply([mzScale(feature.mzEnd), rtScale(feature.rtEnd)]);
+			const i = feature.intensity;
+			if (curTransform.k <= SCALE_THRESHOLD) {
+				ctx.fillStyle = colorScale(i);
+				ctx.fillRect(start[0], start[1], end[0] - start[0], end[1] - start[1]);
+				ctx.strokeStyle = "#999";
+				if (feature.selected) {
+					ctx.strokeStyle = "#000";
+				}
+				ctx.strokeRect(start[0], start[1], end[0] - start[0], end[1] - start[1]);
+			} else {
+				ctx.strokeStyle = colorScale(i);
+				ctx.strokeRect(start[0], start[1], end[0] - start[0], end[1] - start[1]);
+			}
+		}
+		if (endIdx < features.length) {
+			requestAnnimationFrame(() => staggeredDrawFeatures(endIdx, num));
+		}
+	}
+*/
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 
 	handler.handleProgress = function(monitor) {
 		if (!monitor.progress) {
@@ -479,6 +695,7 @@ spectrumView = function() {
 		} else {
 			// Received intensity points
 			olTopRight.text("");
+<<<<<<< HEAD
 			if (getSize() < DETAIL_SIZE) {
 				// Sort so points with high intensity are on top of ones with lower intensity
 				points = response.response.points
@@ -501,11 +718,35 @@ spectrumView = function() {
 			} else {
 				points = [];
 			}
+=======
+			// Sort so points with high intensity are on top of ones with lower intensity
+			points = response.response.points
+				.sort(function(a,b) {
+					return a.intensity - b.intensity;
+				});
+
+			// log and normalize
+			let min = Number.POSITIVE_INFINITY;
+			let max = Number.NEGATIVE_INFINITY;
+			for (let p of points) {
+				p.intensity = Math.log(p.intensity);
+				min = Math.min(p.intensity, min);
+				max = Math.max(p.intensity, max);
+			}
+			for (let p of points) {
+				p.intensity = (p.intensity - min) / (max - min);
+			}
+			draw();
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 		}
 	}
 
 	handler.handleError = function(error) {
+<<<<<<< HEAD
 		console.error(error);
+=======
+		console.log(error);
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 	}
 
 	handler.validate = function() {
@@ -514,6 +755,7 @@ spectrumView = function() {
 
 	handler.setValidationError = function() {}
 
+<<<<<<< HEAD
 	function round4(x) {
 		return Math.round(x * 10000) / 10000;
 	}
@@ -526,6 +768,10 @@ spectrumView = function() {
 			colorMode: colorMode === COLOR_BY_INTENSITY ? "INTENSITY" : "QUALITY",
 			minMz: round4(end[1]), maxMz: round4(start[1]),
 			minRt: round4(start[0]), maxRt: round4(end[0])};
+=======
+	handler.getComponentValue = function() {
+		return _value;
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 	}
 
 	return handler;

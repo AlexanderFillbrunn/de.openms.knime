@@ -55,9 +55,12 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONViewContent;
 
+<<<<<<< HEAD
 import de.openms.knime.views.spectrum.SpectrumViewConfig.ColorMode;
 import de.openms.knime.views.spectrum.SpectrumViewConfig.ZoomMode;
 
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 /**
  *
  * @author Christian Albrecht, KNIME GmbH, Konstanz, Germany
@@ -70,14 +73,18 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
     private static final String CFG_MIN_MZ = "minmz";
     private static final String CFG_HAS_DB = "hasDB";
     private static final String CFG_TABLE_ID = "tableId";
+<<<<<<< HEAD
     private static final String CFG_ALLOW_PAN_ZOOM = "allowPanAndZoom";
     private static final String CFG_ALLOW_RECTANGLE_ZOOM = "allowRectangleZoom";
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     
     private int m_maxRt;
     private int m_minRt;
     private int m_maxMz;
     private int m_minMz;
     private boolean m_hasDB;
+<<<<<<< HEAD
     private String m_tableId;
     private boolean m_allowPanAndZoom;
     private boolean m_allowRectZoom;
@@ -95,6 +102,15 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
     }
     
     public void setTableId(String tableId) {
+=======
+    private int m_tableId;
+    
+    public int getTableId() {
+        return m_tableId;
+    }
+    
+    public void setTableId(int tableId) {
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
         m_tableId = tableId;
     }
     
@@ -102,10 +118,13 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
         return m_hasDB;
     }
     
+<<<<<<< HEAD
     public void setPanAndZoomAllowed(boolean allowPanAndZoom) {
         m_allowPanAndZoom = allowPanAndZoom;
     }
     
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public void setHasDB(boolean hasDB) {
         m_hasDB = hasDB;
     }
@@ -141,10 +160,13 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
     public void setMinMz(int minMz) {
         m_minMz = minMz;
     }
+<<<<<<< HEAD
     
     public void setRectZoomAllowed(boolean allowRectZoom) {
         m_allowRectZoom = allowRectZoom;
     }
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 
     /**
      * {@inheritDoc}
@@ -156,9 +178,13 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
         settings.addInt(CFG_MAX_RT, m_maxRt);
         settings.addInt(CFG_MIN_RT, m_minRt);
         settings.addBoolean(CFG_HAS_DB, m_hasDB);
+<<<<<<< HEAD
         settings.addString(CFG_TABLE_ID, m_tableId);
         settings.addBoolean(CFG_ALLOW_PAN_ZOOM, m_allowPanAndZoom);
         settings.addBoolean(CFG_ALLOW_RECTANGLE_ZOOM, m_allowRectZoom);
+=======
+        settings.addInt(CFG_TABLE_ID, m_tableId);
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     }
 
     /**
@@ -171,9 +197,13 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
         m_maxRt = settings.getInt(CFG_MAX_RT);
         m_minRt = settings.getInt(CFG_MIN_RT);
         m_hasDB = settings.getBoolean(CFG_HAS_DB);
+<<<<<<< HEAD
         m_tableId = settings.getString(CFG_TABLE_ID);
         m_allowPanAndZoom = settings.getBoolean(CFG_ALLOW_PAN_ZOOM);
         m_allowRectZoom = settings.getBoolean(CFG_ALLOW_RECTANGLE_ZOOM);
+=======
+        m_tableId = settings.getInt(CFG_TABLE_ID);
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     }
 
     /**
@@ -198,8 +228,11 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
                 .append(m_maxRt, other.m_maxRt)
                 .append(m_minRt, other.m_minRt)
                 .append(m_hasDB, other.m_hasDB)
+<<<<<<< HEAD
                 .append(m_allowPanAndZoom, other.m_allowPanAndZoom)
                 .append(m_allowRectZoom, other.m_allowRectZoom)
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
                 .isEquals();
     }
 
@@ -215,8 +248,11 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
                 .append(m_maxRt)
                 .append(m_minRt)
                 .append(m_hasDB)
+<<<<<<< HEAD
                 .append(m_allowPanAndZoom)
                 .append(m_allowRectZoom)
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
                 .toHashCode();
     }
 

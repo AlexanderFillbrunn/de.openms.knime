@@ -53,6 +53,7 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.defaultnodesettings.SettingsModelColumnName;
+<<<<<<< HEAD
 import org.knime.core.node.defaultnodesettings.SettingsModelDouble;
 import org.knime.core.node.defaultnodesettings.SettingsModelDoubleBounded;
 import org.knime.core.node.defaultnodesettings.SettingsModelString;
@@ -82,6 +83,16 @@ public class SpectrumViewConfig {
     }
 
     // Config keys for saving the object to settings
+=======
+import org.knime.core.node.defaultnodesettings.SettingsModelString;
+
+/**
+ *
+ * @author Alexander Fillbrunn
+ */
+public class SpectrumViewConfig {
+
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     private static final String CFG_HIDE = "hideInWizard";
     private static final String CFG_MZ_START_COLUMN = "mzStartCol";
     private static final String CFG_MZ_END_COLUMN = "mzEndCol";
@@ -90,6 +101,7 @@ public class SpectrumViewConfig {
     private static final String CFG_INTENSITY = "intensity";
     private static final String CFG_QUALITY = "quality";
     private static final String CFG_TABLE_NAME = "tableName";
+<<<<<<< HEAD
     private static final String CFG_SUBSCRIBE_TO_SELECTION = "subscribeToSelection";
     private static final String CFG_ALLOW_PAN_ZOOM = "allowPanAndZoom";
     private static final String CFG_ALLOW_RECTANGLE_ZOOM = "allowRectZoom";
@@ -102,6 +114,9 @@ public class SpectrumViewConfig {
     private static final String CFG_COLOR_MODE = "colorMode";
     
     // The settings models
+=======
+    
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     private SettingsModelBoolean m_hideInWizard = createHideInWizardSettingsModel();
     private SettingsModelColumnName m_mzStartColumn = createMzStartColumnSettingsModel();
     private SettingsModelColumnName m_mzEndColumn = createMzEndColumnSettingsModel();
@@ -110,6 +125,7 @@ public class SpectrumViewConfig {
     private SettingsModelColumnName m_intensityColumn = createIntensityColumnSettingsModel();
     private SettingsModelColumnName m_qualityColumn = createQualityColumnSettingsModel();
     private SettingsModelString m_tableName = createTableNameSettingsModel();
+<<<<<<< HEAD
     private SettingsModelBoolean m_subscribeToSelection = createSubscribeToSelectionSettingsModel();
     private SettingsModelBoolean m_allowPanAndZoom = createAllowPanAndZoomSettingsModel();
     private SettingsModelBoolean m_allowRectZoom = createAllowRectZoomSettingsModel();
@@ -157,6 +173,9 @@ public class SpectrumViewConfig {
         return new SettingsModelBoolean(CFG_ALLOW_PAN_ZOOM, true);
     }
     
+=======
+
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     private static SettingsModelString createTableNameSettingsModel() {
         return new SettingsModelString(CFG_TABLE_NAME, "");
     }
@@ -189,6 +208,7 @@ public class SpectrumViewConfig {
         return new SettingsModelColumnName(CFG_QUALITY, null);
     }
     
+<<<<<<< HEAD
     private static SettingsModelBoolean createSubscribeToSelectionSettingsModel() {
         return new SettingsModelBoolean(CFG_SUBSCRIBE_TO_SELECTION, true);
     }
@@ -267,63 +287,87 @@ public class SpectrumViewConfig {
      * @return the settings model for the name of the table with the intensities
      *         in the database that is connected to the node
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public SettingsModelString getTableNameSettingsModel() {
         return m_tableName;
     }
     
+<<<<<<< HEAD
     /**
      * @return the settings model determining whether the view is hidden in the wizard
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public SettingsModelBoolean getHideInWizardSettingsModel() {
         return m_hideInWizard;
     }
     
+<<<<<<< HEAD
     /**
      * @return the settings model for the column name of the column
      *         holding the start of a feature's bounding box on the mz axis
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public SettingsModelColumnName getMzStartColumnSettingsModel() {
         return m_mzStartColumn;
     }
     
+<<<<<<< HEAD
     /**
      * @return the settings model for the column name of the column
      *         holding the end of a feature's bounding box on the mz axis
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public SettingsModelColumnName getMzEndColumnSettingsModel() {
         return m_mzEndColumn;
     }
     
+<<<<<<< HEAD
     /**
      * @return the settings model for the column name of the column
      *         holding the start of a feature's bounding box on the rt axis
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public SettingsModelColumnName getRtStartColumnSettingsModel() {
         return m_rtStartColumn;
     }
     
+<<<<<<< HEAD
     /**
      * @return the settings model for the column name of the column
      *         holding the end of a feature's bounding box on the rt axis
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public SettingsModelColumnName getRtEndColumnSettingsModel() {
         return m_rtEndColumn;
     }
     
+<<<<<<< HEAD
     /**
      * @return the settings model for the name of the intensity column
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public SettingsModelColumnName getIntensityColumnSettingsModel() {
         return m_intensityColumn;
     }
     
+<<<<<<< HEAD
     /**
      * @return the settings model for the name of the quality column
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public SettingsModelColumnName getQualityColumnSettingsModel() {
         return m_qualityColumn;
     }
     
+<<<<<<< HEAD
     /**
      * @return the default zoom mode in the view
      */
@@ -400,52 +444,74 @@ public class SpectrumViewConfig {
     /**
      * @return the name of the table containing intensity info in the connected database
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public String getTableName() {
         return m_tableName.getStringValue();
     }
     
     /**
+<<<<<<< HEAD
      * @return whether the view is hidden in the wizard
+=======
+     * @return the hideInWizard
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
      */
     public boolean isHideInWizard() {
         return m_hideInWizard.getBooleanValue();
     }
 
+<<<<<<< HEAD
     /**
      * @return the column determining the start of a feature's bounding box on the mz axis
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public String getMzStartColumn() {
         return m_mzStartColumn.getColumnName();
     }
     
+<<<<<<< HEAD
     /**
      * @return the column determining the end of a feature's bounding box on the mz axis
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public String getMzEndColumn() {
         return m_mzEndColumn.getColumnName();
     }
     
+<<<<<<< HEAD
     /**
      * @return the column determining the start of a feature's bounding box on the rt axis
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public String getRtStartColumn() {
         return m_rtStartColumn.getColumnName();
     }
 
+<<<<<<< HEAD
     /**
      * @return the column determining the end of a feature's bounding box on the rt axis
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public String getRtEndColumn() {
         return m_rtEndColumn.getColumnName();
     }
 
+<<<<<<< HEAD
     /**
      * @return the column with a feature's intensity
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public String getIntensityColumn() {
         return m_intensityColumn.getColumnName();
     }
 
+<<<<<<< HEAD
     /**
      * @return the column with a feature's quality
      */
@@ -460,6 +526,11 @@ public class SpectrumViewConfig {
         return m_allowRectZoom.getBooleanValue();
     }
 
+=======
+    public String getQualityColumn() {
+        return m_qualityColumn.getColumnName();
+    }
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 
     void saveToSettings(final NodeSettingsWO settings) {
         m_hideInWizard.saveSettingsTo(settings);
@@ -470,6 +541,7 @@ public class SpectrumViewConfig {
         m_intensityColumn.saveSettingsTo(settings);
         m_qualityColumn.saveSettingsTo(settings);
         m_tableName.saveSettingsTo(settings);
+<<<<<<< HEAD
         m_subscribeToSelection.saveSettingsTo(settings);
         m_allowPanAndZoom.saveSettingsTo(settings);
         m_allowRectZoom.saveSettingsTo(settings);
@@ -480,6 +552,8 @@ public class SpectrumViewConfig {
         m_useCustomViewBounds.saveSettingsTo(settings);
         m_zoomMode.saveSettingsTo(settings);
         m_colorMode.saveSettingsTo(settings);
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     }
 
     void loadFromSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
@@ -491,6 +565,7 @@ public class SpectrumViewConfig {
         m_intensityColumn.loadSettingsFrom(settings);
         m_qualityColumn.loadSettingsFrom(settings);
         m_tableName.loadSettingsFrom(settings);
+<<<<<<< HEAD
         m_subscribeToSelection.loadSettingsFrom(settings);
         m_allowPanAndZoom.loadSettingsFrom(settings);
         m_allowRectZoom.loadSettingsFrom(settings);
@@ -596,74 +671,99 @@ public class SpectrumViewConfig {
      * Sets whether the view should be visible in the wizard
      * @param hide true if the view should not be visible in the wizard
      */
+=======
+    }
+
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public void setHideInWizard(boolean hide) {
         m_hideInWizard.setBooleanValue(hide);
     }
     
+<<<<<<< HEAD
     /**
      * Sets the column name of the column determining a feature's interval start on
      * the mz axis
      * 
      * @param colName the name of the column to use
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public void setMzStartColumn(String colName) {
         m_mzStartColumn.setStringValue(colName);
     }
     
+<<<<<<< HEAD
     /**
      * Sets the column name of the column determining a feature's interval end on
      * the mz axis
      * 
      * @param colName the name of the column to use
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public void setMzEndColumn(String colName) {
         m_mzEndColumn.setStringValue(colName);
     }
     
+<<<<<<< HEAD
     /**
      * Sets the column name of the column determining a feature's interval start on
      * the rt axis
      * 
      * @param colName the name of the column to use
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public void setRtStartColumn(String colName) {
         m_rtStartColumn.setStringValue(colName);
     }
     
+<<<<<<< HEAD
     /**
      * Sets the column name of the column determining a feature's interval end on
      * the rt axis
      * 
      * @param colName the name of the column to use
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public void setRtEndColumn(String colName) {
         m_rtEndColumn.setStringValue(colName);
     }
     
+<<<<<<< HEAD
     /**
      * Sets the name of the column containing a feature's intensity
      * 
      * @param colName the name of the column to use
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public void setIntensityColumn(String colName) {
         m_intensityColumn.setStringValue(colName);
     }
     
+<<<<<<< HEAD
     /**
      * Sets the name of the column containing a feature's quality
      * 
      * @param colName the name of the column to use
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public void setQualityColumn(String colName) {
         m_qualityColumn.setStringValue(colName);
     }
     
+<<<<<<< HEAD
     /**
      * Sets the name of the table in the database that contains the intensity
      * for a combination of retention time and mass over charge
      * 
      * @param tableName the name of the table in the database
      */
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     public void setTableName(String tableName) {
         m_tableName.setStringValue(tableName);
     }

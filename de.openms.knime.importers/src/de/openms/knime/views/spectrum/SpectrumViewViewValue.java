@@ -55,15 +55,19 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONViewContent;
 
+<<<<<<< HEAD
 import de.openms.knime.views.spectrum.SpectrumViewConfig.ColorMode;
 import de.openms.knime.views.spectrum.SpectrumViewConfig.ZoomMode;
 
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 /**
  *
  * @author Christian Albrecht, KNIME GmbH, Konstanz, Germany
  */
 public class SpectrumViewViewValue extends JSONViewContent {
 
+<<<<<<< HEAD
     private static final String CFG_SUBSCRIBE_TO_SELECTION = "subscribeToSelection";
     private static final String CFG_MIN_MZ = "minMz";
     private static final String CFG_MAX_MZ = "maxMz";
@@ -147,11 +151,14 @@ public class SpectrumViewViewValue extends JSONViewContent {
         m_colorMode = colorMode;
     }
     
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     /**
      * {@inheritDoc}
      */
     @Override
     public void saveToNodeSettings(final NodeSettingsWO settings) {
+<<<<<<< HEAD
         settings.addBoolean(CFG_SUBSCRIBE_TO_SELECTION, m_subscribeToSelection);
         settings.addDouble(CFG_MIN_MZ, m_minMz);
         settings.addDouble(CFG_MAX_MZ, m_maxMz);
@@ -160,6 +167,9 @@ public class SpectrumViewViewValue extends JSONViewContent {
         settings.addBoolean(CFG_USE_CUSTOM_BOUNDS, m_useCustomBounds);
         settings.addString(CFG_ZOOM_MODE, m_zoomMode.name());
         settings.addString(CFG_COLOR_MODE, m_colorMode.name());
+=======
+        // nothing to save
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     }
 
     /**
@@ -167,6 +177,7 @@ public class SpectrumViewViewValue extends JSONViewContent {
      */
     @Override
     public void loadFromNodeSettings(final NodeSettingsRO settings) throws InvalidSettingsException {
+<<<<<<< HEAD
         m_subscribeToSelection = settings.getBoolean(CFG_SUBSCRIBE_TO_SELECTION);
         m_minMz = settings.getDouble(CFG_MIN_MZ);
         m_maxMz = settings.getDouble(CFG_MAX_MZ);
@@ -175,6 +186,9 @@ public class SpectrumViewViewValue extends JSONViewContent {
         m_useCustomBounds = settings.getBoolean(CFG_USE_CUSTOM_BOUNDS);
         m_zoomMode = ZoomMode.valueOf(settings.getString(CFG_ZOOM_MODE));
         m_colorMode = ColorMode.valueOf(settings.getString(CFG_COLOR_MODE));
+=======
+        // nothing to load
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     }
 
     /**
@@ -193,6 +207,7 @@ public class SpectrumViewViewValue extends JSONViewContent {
         }
         SpectrumViewViewValue other = (SpectrumViewViewValue)obj;
         return new EqualsBuilder()
+<<<<<<< HEAD
                 .append(m_subscribeToSelection, other.m_subscribeToSelection)
                 .append(m_minMz, other.m_minMz)
                 .append(m_maxMz, other.m_maxMz)
@@ -201,6 +216,8 @@ public class SpectrumViewViewValue extends JSONViewContent {
                 .append(m_useCustomBounds, other.m_useCustomBounds)
                 .append(m_zoomMode, other.m_zoomMode)
                 .append(m_colorMode, other.m_colorMode)
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
                 .isEquals();
     }
 
@@ -210,6 +227,7 @@ public class SpectrumViewViewValue extends JSONViewContent {
     @Override
     public int hashCode() {
         return new HashCodeBuilder()
+<<<<<<< HEAD
                 .append(m_subscribeToSelection)
                 .append(m_minMz)
                 .append(m_maxMz)
@@ -218,6 +236,8 @@ public class SpectrumViewViewValue extends JSONViewContent {
                 .append(m_useCustomBounds)
                 .append(m_zoomMode)
                 .append(m_colorMode)
+=======
+>>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
                 .toHashCode();
     }
 
