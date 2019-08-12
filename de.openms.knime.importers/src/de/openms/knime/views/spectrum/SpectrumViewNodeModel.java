@@ -102,11 +102,8 @@ public class SpectrumViewNodeModel
         extends AbstractWizardNodeModel<SpectrumViewViewRepresentation, SpectrumViewViewValue>
         implements JSONViewRequestHandler<SpectrumViewViewRequest, SpectrumViewViewResponse> {
 
-<<<<<<< HEAD
     private static final int FEATURES_PER_BATCH = 5000;
     
-=======
->>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     private final SpectrumViewConfig m_config;
 
     private final SettingsModelDatabaseDataTypeMapping m_externalToKnime = createExternalToKnimeMappingModel();
@@ -145,11 +142,7 @@ public class SpectrumViewNodeModel
     public SpectrumViewViewRequest createEmptyViewRequest() {
         return new SpectrumViewViewRequest();
     }
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     private SpectrumViewViewResponse handleFeaturesRequest(final SpectrumViewViewRequest request,
             final ExecutionMonitor exec) {
         SpectrumViewViewResponse response = new SpectrumViewViewResponse(request);
@@ -158,11 +151,7 @@ public class SpectrumViewNodeModel
         }
         List<Feature> chunk = new ArrayList<>();
         int count = 0;
-<<<<<<< HEAD
         while (m_currentIter.hasNext() && count < FEATURES_PER_BATCH) {
-=======
-        while (m_currentIter.hasNext() && count < 100) {
->>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
             chunk.add(m_currentIter.next());
             count++;
         }
@@ -190,11 +179,7 @@ public class SpectrumViewNodeModel
                 double time = ((DoubleValue) row.getCell(timeIdx)).getDoubleValue();
                 double mass = ((DoubleValue) row.getCell(massIdx)).getDoubleValue();
                 double intensity = ((DoubleValue) row.getCell(intensityIdx)).getDoubleValue();
-<<<<<<< HEAD
                 SpectrumPoint p = new SpectrumPoint(mass, time, intensity);
-=======
-                SpectrumPoint p = new SpectrumPoint(time, mass, intensity);
->>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
                 pts.add(p);
             }
             SpectrumViewViewResponse resp = new SpectrumViewViewResponse(request);
@@ -335,7 +320,6 @@ public class SpectrumViewNodeModel
     protected PortObject[] performExecute(final PortObject[] inObjects, final ExecutionContext exec) throws Exception {
         m_featureTable = (BufferedDataTable) inObjects[0];
         SpectrumViewViewRepresentation rep = getViewRepresentation();
-<<<<<<< HEAD
         SpectrumViewViewValue val = getViewValue();
         
         DataTableSpec spec = m_featureTable.getSpec();
@@ -364,17 +348,6 @@ public class SpectrumViewNodeModel
         
         rep.setRectZoomAllowed(m_config.isRectZoomAllowed());
         rep.setPanAndZoomAllowed(m_config.isPanAndZoomAllowed());
-=======
-        DataTableSpec spec = m_featureTable.getSpec();
-        DataColumnSpec mzSpec = spec.getColumnSpec(m_config.getMzStartColumn());
-        DataColumnSpec rtStartSpec = spec.getColumnSpec(m_config.getRtStartColumn());
-        DataColumnSpec rtEndSpec = spec.getColumnSpec(m_config.getRtEndColumn());
-
-        rep.setMinMz((int) Math.floor(((DoubleValue) mzSpec.getDomain().getLowerBound()).getDoubleValue()));
-        rep.setMaxMz((int) Math.ceil(((DoubleValue) mzSpec.getDomain().getUpperBound()).getDoubleValue()));
-        rep.setMinRt((int) Math.floor(((DoubleValue) rtStartSpec.getDomain().getLowerBound()).getDoubleValue()));
-        rep.setMaxRt((int) Math.ceil(((DoubleValue) rtEndSpec.getDomain().getUpperBound()).getDoubleValue()));
->>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
 
         if (inObjects[1] != null) {
             m_database = (DBSessionPortObject) inObjects[1];
@@ -382,7 +355,6 @@ public class SpectrumViewNodeModel
         } else {
             rep.setHasDB(false);
         }
-<<<<<<< HEAD
         rep.setTableId(getInHiLiteHandler(0).getHiliteHandlerID().toString());
         
         if (isViewValueEmpty()) {
@@ -396,9 +368,6 @@ public class SpectrumViewNodeModel
             val.setZoomMode(m_config.getZoomMode());
         }
         
-=======
-        rep.setTableId(m_featureTable.getBufferedTableId());
->>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
         return new PortObject[] {};
     }
 
@@ -411,17 +380,12 @@ public class SpectrumViewNodeModel
         m_currentIter = null;
         m_database = null;
     }
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     /**
      * {@inheritDoc}
      */
     @Override
     protected void useCurrentValueAsDefault() {
-<<<<<<< HEAD
         synchronized (getLock()) {
             copyViewValueToConfig();
         }
@@ -439,11 +403,6 @@ public class SpectrumViewNodeModel
         m_config.setZoomMode(viewValue.getZoomMode());
     }
     
-=======
-        // nothing to do
-    }
-
->>>>>>> 09812e6732b1ce92aae8a710afd46d2635b511f6
     /**
      * {@inheritDoc}
      */
