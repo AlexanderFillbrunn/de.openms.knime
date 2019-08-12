@@ -55,6 +55,9 @@ import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NodeSettingsWO;
 import org.knime.js.core.JSONViewContent;
 
+import de.openms.knime.views.spectrum.SpectrumViewConfig.ColorMode;
+import de.openms.knime.views.spectrum.SpectrumViewConfig.ZoomMode;
+
 /**
  *
  * @author Christian Albrecht, KNIME GmbH, Konstanz, Germany
@@ -67,24 +70,40 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
     private static final String CFG_MIN_MZ = "minmz";
     private static final String CFG_HAS_DB = "hasDB";
     private static final String CFG_TABLE_ID = "tableId";
+    private static final String CFG_ALLOW_PAN_ZOOM = "allowPanAndZoom";
+    private static final String CFG_ALLOW_RECTANGLE_ZOOM = "allowRectangleZoom";
     
     private int m_maxRt;
     private int m_minRt;
     private int m_maxMz;
     private int m_minMz;
     private boolean m_hasDB;
-    private int m_tableId;
+    private String m_tableId;
+    private boolean m_allowPanAndZoom;
+    private boolean m_allowRectZoom;
     
-    public int getTableId() {
+    public boolean isRectZoomAllowed() {
+        return m_allowRectZoom;
+    }
+    
+    public boolean isPanAndZoomAllowed() {
+        return m_allowPanAndZoom;
+    }
+
+    public String getTableId() {
         return m_tableId;
     }
     
-    public void setTableId(int tableId) {
+    public void setTableId(String tableId) {
         m_tableId = tableId;
     }
     
     public boolean isHasDB() {
         return m_hasDB;
+    }
+    
+    public void setPanAndZoomAllowed(boolean allowPanAndZoom) {
+        m_allowPanAndZoom = allowPanAndZoom;
     }
     
     public void setHasDB(boolean hasDB) {
@@ -122,6 +141,10 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
     public void setMinMz(int minMz) {
         m_minMz = minMz;
     }
+    
+    public void setRectZoomAllowed(boolean allowRectZoom) {
+        m_allowRectZoom = allowRectZoom;
+    }
 
     /**
      * {@inheritDoc}
@@ -133,7 +156,9 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
         settings.addInt(CFG_MAX_RT, m_maxRt);
         settings.addInt(CFG_MIN_RT, m_minRt);
         settings.addBoolean(CFG_HAS_DB, m_hasDB);
-        settings.addInt(CFG_TABLE_ID, m_tableId);
+        settings.addString(CFG_TABLE_ID, m_tableId);
+        settings.addBoolean(CFG_ALLOW_PAN_ZOOM, m_allowPanAndZoom);
+        settings.addBoolean(CFG_ALLOW_RECTANGLE_ZOOM, m_allowRectZoom);
     }
 
     /**
@@ -146,7 +171,9 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
         m_maxRt = settings.getInt(CFG_MAX_RT);
         m_minRt = settings.getInt(CFG_MIN_RT);
         m_hasDB = settings.getBoolean(CFG_HAS_DB);
-        m_tableId = settings.getInt(CFG_TABLE_ID);
+        m_tableId = settings.getString(CFG_TABLE_ID);
+        m_allowPanAndZoom = settings.getBoolean(CFG_ALLOW_PAN_ZOOM);
+        m_allowRectZoom = settings.getBoolean(CFG_ALLOW_RECTANGLE_ZOOM);
     }
 
     /**
@@ -171,6 +198,8 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
                 .append(m_maxRt, other.m_maxRt)
                 .append(m_minRt, other.m_minRt)
                 .append(m_hasDB, other.m_hasDB)
+                .append(m_allowPanAndZoom, other.m_allowPanAndZoom)
+                .append(m_allowRectZoom, other.m_allowRectZoom)
                 .isEquals();
     }
 
@@ -186,6 +215,8 @@ public class SpectrumViewViewRepresentation extends JSONViewContent {
                 .append(m_maxRt)
                 .append(m_minRt)
                 .append(m_hasDB)
+                .append(m_allowPanAndZoom)
+                .append(m_allowRectZoom)
                 .toHashCode();
     }
 

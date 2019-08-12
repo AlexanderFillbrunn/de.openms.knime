@@ -50,18 +50,23 @@ package de.openms.knime.views.spectrum;
 
 import java.sql.SQLType;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import org.knime.core.data.DoubleValue;
 import org.knime.core.node.InvalidSettingsException;
 import org.knime.core.node.NodeSettingsRO;
 import org.knime.core.node.NotConfigurableException;
 import org.knime.core.node.defaultnodesettings.DefaultNodeSettingsPane;
 import org.knime.core.node.defaultnodesettings.DialogComponentBoolean;
+import org.knime.core.node.defaultnodesettings.DialogComponentButtonGroup;
 import org.knime.core.node.defaultnodesettings.DialogComponentColumnNameSelection;
+import org.knime.core.node.defaultnodesettings.DialogComponentNumber;
 import org.knime.core.node.defaultnodesettings.DialogComponentString;
+import org.knime.core.node.defaultnodesettings.SettingsModelBoolean;
 import org.knime.core.node.port.PortObjectSpec;
 import org.knime.database.datatype.mapping.DBTypeMappingRegistry;
 import org.knime.database.datatype.mapping.DBTypeMappingService;
-import org.knime.database.node.component.sqleditor.DBDataTypeMappingConfigurationSupplier;
 import org.knime.database.port.DBSessionPortObjectSpec;
 import org.knime.database.session.DBSession;
 import org.knime.datatype.mapping.DataTypeMappingConfiguration;
@@ -78,10 +83,6 @@ public class SpectrumViewNodeDialog extends DefaultNodeSettingsPane {
     DialogComponentDataTypeMapping<SQLType> m_mapping;
     
     public SpectrumViewNodeDialog() {
-        DialogComponentBoolean hideInWizard = new DialogComponentBoolean(m_config.getHideInWizardSettingsModel(),
-                "Hide in wizard");
-        addDialogComponent(hideInWizard);
-
         createNewGroup("Coordinate columns");
         setHorizontalPlacement(true);
         DialogComponentColumnNameSelection mzStartCol = new DialogComponentColumnNameSelection(
@@ -104,7 +105,7 @@ public class SpectrumViewNodeDialog extends DefaultNodeSettingsPane {
         addDialogComponent(rtEndCol);
         
         closeCurrentGroup();
-        
+
         DialogComponentColumnNameSelection intensityCol = new DialogComponentColumnNameSelection(
                 m_config.getIntensityColumnSettingsModel(), "Intensity column", 0, DoubleValue.class);
         addDialogComponent(intensityCol);
@@ -118,6 +119,64 @@ public class SpectrumViewNodeDialog extends DefaultNodeSettingsPane {
         DialogComponentString tableName = new DialogComponentString(m_config.getTableNameSettingsModel(), "Table name");
         addDialogComponent(tableName);
         
+        createNewTab("View Settings");
+        
+        DialogComponentBoolean hideInWizard = new DialogComponentBoolean(m_config.getHideInWizardSettingsModel(),
+                "Hide in wizard");
+        addDialogComponent(hideInWizard);
+        
+        DialogComponentBoolean subscribeToSelection =
+                new DialogComponentBoolean(m_config.getSubscribeToSelectionSettingsModel(), "Subscribe to selection");
+        addDialogComponent(subscribeToSelection);
+        
+        setHorizontalPlacement(true);
+        
+        DialogComponentBoolean allowPanAndZoom = new DialogComponentBoolean(m_config.getAllowPanAndZoomSettingsModel(), "Allow panning and zooming");
+        addDialogComponent(allowPanAndZoom);
+        
+        DialogComponentBoolean allowRectZoom = new DialogComponentBoolean(m_config.getAllowRectZoomSettingsModel(), "Allow rectangle zooming");
+        addDialogComponent(allowRectZoom);
+        
+        setHorizontalPlacement(false);
+        setHorizontalPlacement(true);
+        
+        DialogComponentButtonGroup zoomMode = new DialogComponentButtonGroup(m_config.getZoomModeSettingsModel(), false, "Zoom Mode", SpectrumViewConfig.ZOOM_MODES);
+        addDialogComponent(zoomMode);
+        
+        DialogComponentButtonGroup colorMode = new DialogComponentButtonGroup(m_config.getColorModeSettingsModel(), false, "Color Mode", SpectrumViewConfig.COLOR_MODES);
+        addDialogComponent(colorMode);
+        
+        setHorizontalPlacement(false);
+        createNewGroup("Viewport");
+        
+        SettingsModelBoolean useCustomBoundsSM = m_config.getUseCustomViewBoundsSettingsModel();
+        DialogComponentBoolean useCustomBounds = new DialogComponentBoolean(useCustomBoundsSM, "Use custom view bounds");
+        addDialogComponent(useCustomBounds);
+        
+        setHorizontalPlacement(true);
+        DialogComponentNumber minMz = new DialogComponentNumber(m_config.getMinMzSettingsModel(), "Minimum MZ", 1.0);
+        addDialogComponent(minMz);
+        
+        DialogComponentNumber maxMz = new DialogComponentNumber(m_config.getMaxMzSettingsModel(), "Maximum MZ", 1.0);
+        addDialogComponent(maxMz);
+        
+        setHorizontalPlacement(false);
+        setHorizontalPlacement(true);
+        
+        DialogComponentNumber minRt = new DialogComponentNumber(m_config.getMinRtSettingsModel(), "Minimum RT", 1.0);
+        addDialogComponent(minRt);
+        
+        DialogComponentNumber maxRt = new DialogComponentNumber(m_config.getMaxRtSettingsModel(), "Maximum RT", 1.0);
+        addDialogComponent(maxRt);
+        closeCurrentGroup();
+        
+        useCustomBoundsSM.addChangeListener((e) -> {
+            m_config.getMinMzSettingsModel().setEnabled(useCustomBoundsSM.getBooleanValue());
+            m_config.getMaxMzSettingsModel().setEnabled(useCustomBoundsSM.getBooleanValue());
+            m_config.getMinRtSettingsModel().setEnabled(useCustomBoundsSM.getBooleanValue());
+            m_config.getMaxRtSettingsModel().setEnabled(useCustomBoundsSM.getBooleanValue());
+        });
+
         createNewTab("Type Mapping");
         m_mapping = new DialogComponentDataTypeMapping(
                 SpectrumViewNodeModel.createExternalToKnimeMappingModel());
@@ -128,12 +187,17 @@ public class SpectrumViewNodeDialog extends DefaultNodeSettingsPane {
     public void loadAdditionalSettingsFrom(NodeSettingsRO settings, PortObjectSpec[] specs)
             throws NotConfigurableException {
         super.loadAdditionalSettingsFrom(settings, specs);
+        
+        SettingsModelBoolean useCustomBoundsSM = m_config.getUseCustomViewBoundsSettingsModel();
+        m_config.getMinMzSettingsModel().setEnabled(useCustomBoundsSM.getBooleanValue());
+        m_config.getMaxMzSettingsModel().setEnabled(useCustomBoundsSM.getBooleanValue());
+        m_config.getMinRtSettingsModel().setEnabled(useCustomBoundsSM.getBooleanValue());
+        m_config.getMaxRtSettingsModel().setEnabled(useCustomBoundsSM.getBooleanValue());
+        
         final DBSessionPortObjectSpec dbPortSpec = (DBSessionPortObjectSpec)specs[1];
 
-        final DBSession session;
-        final DBDataTypeMappingConfigurationSupplier externalToKnimeSupplier;
         if (dbPortSpec != null) {
-            session = dbPortSpec.getDBSession();
+            final DBSession session = dbPortSpec.getDBSession();
 
             final DBTypeMappingService<?, ?> mappingService =
                 DBTypeMappingRegistry.getInstance().getDBTypeMappingService(session.getDBType());
@@ -147,12 +211,6 @@ public class SpectrumViewNodeDialog extends DefaultNodeSettingsPane {
                 throw new NotConfigurableException(e.getMessage(), e);
             }
             m_mapping.setInputDataTypeMappingConfiguration(externalToKnime);
-
-            externalToKnimeSupplier = () -> externalToKnime.with(
-                    m_mapping.getDataTypeMappingModel().getDataTypeMappingConfiguration(mappingService));
-        } else {
-            session = null;
-            externalToKnimeSupplier = null;
         }
         m_mapping.loadSettingsFrom(settings, specs);
     }

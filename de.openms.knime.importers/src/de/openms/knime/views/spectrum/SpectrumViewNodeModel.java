@@ -102,6 +102,8 @@ public class SpectrumViewNodeModel
         extends AbstractWizardNodeModel<SpectrumViewViewRepresentation, SpectrumViewViewValue>
         implements JSONViewRequestHandler<SpectrumViewViewRequest, SpectrumViewViewResponse> {
 
+    private static final int FEATURES_PER_BATCH = 5000;
+    
     private final SpectrumViewConfig m_config;
 
     private final SettingsModelDatabaseDataTypeMapping m_externalToKnime = createExternalToKnimeMappingModel();
@@ -140,7 +142,7 @@ public class SpectrumViewNodeModel
     public SpectrumViewViewRequest createEmptyViewRequest() {
         return new SpectrumViewViewRequest();
     }
-
+    
     private SpectrumViewViewResponse handleFeaturesRequest(final SpectrumViewViewRequest request,
             final ExecutionMonitor exec) {
         SpectrumViewViewResponse response = new SpectrumViewViewResponse(request);
@@ -149,7 +151,7 @@ public class SpectrumViewNodeModel
         }
         List<Feature> chunk = new ArrayList<>();
         int count = 0;
-        while (m_currentIter.hasNext() && count < 100) {
+        while (m_currentIter.hasNext() && count < FEATURES_PER_BATCH) {
             chunk.add(m_currentIter.next());
             count++;
         }
@@ -177,7 +179,7 @@ public class SpectrumViewNodeModel
                 double time = ((DoubleValue) row.getCell(timeIdx)).getDoubleValue();
                 double mass = ((DoubleValue) row.getCell(massIdx)).getDoubleValue();
                 double intensity = ((DoubleValue) row.getCell(intensityIdx)).getDoubleValue();
-                SpectrumPoint p = new SpectrumPoint(time, mass, intensity);
+                SpectrumPoint p = new SpectrumPoint(mass, time, intensity);
                 pts.add(p);
             }
             SpectrumViewViewResponse resp = new SpectrumViewViewResponse(request);
@@ -318,15 +320,34 @@ public class SpectrumViewNodeModel
     protected PortObject[] performExecute(final PortObject[] inObjects, final ExecutionContext exec) throws Exception {
         m_featureTable = (BufferedDataTable) inObjects[0];
         SpectrumViewViewRepresentation rep = getViewRepresentation();
+        SpectrumViewViewValue val = getViewValue();
+        
         DataTableSpec spec = m_featureTable.getSpec();
-        DataColumnSpec mzSpec = spec.getColumnSpec(m_config.getMzStartColumn());
+        DataColumnSpec mzStartSpec = spec.getColumnSpec(m_config.getMzStartColumn());
+        DataColumnSpec mzEndSpec = spec.getColumnSpec(m_config.getMzEndColumn());
         DataColumnSpec rtStartSpec = spec.getColumnSpec(m_config.getRtStartColumn());
         DataColumnSpec rtEndSpec = spec.getColumnSpec(m_config.getRtEndColumn());
-
-        rep.setMinMz((int) Math.floor(((DoubleValue) mzSpec.getDomain().getLowerBound()).getDoubleValue()));
-        rep.setMaxMz((int) Math.ceil(((DoubleValue) mzSpec.getDomain().getUpperBound()).getDoubleValue()));
+        
+        if (mzStartSpec == null) {
+            throw new InvalidSettingsException("No valid mz start column given");
+        }
+        if (mzEndSpec == null) {
+            throw new InvalidSettingsException("No valid mz end column given");
+        }
+        if (rtStartSpec == null) {
+            throw new InvalidSettingsException("No valid rt start column given");
+        }
+        if (rtEndSpec == null) {
+            throw new InvalidSettingsException("No valid rt end column given");
+        }
+        
+        rep.setMinMz((int) Math.floor(((DoubleValue) mzStartSpec.getDomain().getLowerBound()).getDoubleValue()));
+        rep.setMaxMz((int) Math.ceil(((DoubleValue) mzEndSpec.getDomain().getUpperBound()).getDoubleValue()));
         rep.setMinRt((int) Math.floor(((DoubleValue) rtStartSpec.getDomain().getLowerBound()).getDoubleValue()));
         rep.setMaxRt((int) Math.ceil(((DoubleValue) rtEndSpec.getDomain().getUpperBound()).getDoubleValue()));
+        
+        rep.setRectZoomAllowed(m_config.isRectZoomAllowed());
+        rep.setPanAndZoomAllowed(m_config.isPanAndZoomAllowed());
 
         if (inObjects[1] != null) {
             m_database = (DBSessionPortObject) inObjects[1];
@@ -334,7 +355,19 @@ public class SpectrumViewNodeModel
         } else {
             rep.setHasDB(false);
         }
-        rep.setTableId(m_featureTable.getBufferedTableId());
+        rep.setTableId(getInHiLiteHandler(0).getHiliteHandlerID().toString());
+        
+        if (isViewValueEmpty()) {
+            val.setSubscribeToSelection(m_config.getSubscribeToSelection());
+            val.setMinMz(m_config.getMinMz());
+            val.setMaxMz(m_config.getMaxMz());
+            val.setMinRt(m_config.getMinRt());
+            val.setMaxRt(m_config.getMaxRt());
+            val.setUseCustomBounds(m_config.getUseCustomViewBounds());
+            val.setColorMode(m_config.getColorMode());
+            val.setZoomMode(m_config.getZoomMode());
+        }
+        
         return new PortObject[] {};
     }
 
@@ -347,15 +380,29 @@ public class SpectrumViewNodeModel
         m_currentIter = null;
         m_database = null;
     }
-
+    
     /**
      * {@inheritDoc}
      */
     @Override
     protected void useCurrentValueAsDefault() {
-        // nothing to do
+        synchronized (getLock()) {
+            copyViewValueToConfig();
+        }
     }
 
+    private void copyViewValueToConfig() {
+        final SpectrumViewViewValue viewValue = getViewValue();
+        m_config.setSubscribeToSelection(viewValue.getSubscribeToSelection());
+        m_config.setUseCustomViewBounds(viewValue.getUseCustomBounds());
+        m_config.setMinMz(viewValue.getMinMz());
+        m_config.setMaxMz(viewValue.getMaxMz());
+        m_config.setMinRt(viewValue.getMinRt());
+        m_config.setMaxRt(viewValue.getMaxRt());
+        m_config.setColorMode(viewValue.getColorMode());
+        m_config.setZoomMode(viewValue.getZoomMode());
+    }
+    
     /**
      * {@inheritDoc}
      */
